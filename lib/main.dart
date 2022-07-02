@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: PointerDrawingWidget(title:'Pointer drawing lesson'),
+      home: PointerDrawingWidget(title: 'Pointer drawing lesson'),
     );
   }
 }
@@ -27,15 +27,25 @@ class PointerDrawingWidget extends StatefulWidget {
 class _PointerDrawingWidgetState extends State<PointerDrawingWidget> {
   final _points = List<Offset>();
 
+  double x = 0.0;
+  double y = 0.0;
+
+  void _updateLocation(PointerEvent details) {
+    setState(() {
+      x = details.position.dx;
+      y = details.position.dy;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: GestureDetector(
+      body: MouseRegion(
         // TapDownイベントを検知
-        onTapDown: _addPoint,
+        onHover: _addPoint,
         // カスタムペイント
         child: CustomPaint(
           painter: MyPainter(_points),
@@ -53,14 +63,14 @@ class _PointerDrawingWidgetState extends State<PointerDrawingWidget> {
   }
 
   // タッチした点をクリアする
-  void _clearPoints(){
-    setState((){
+  void _clearPoints() {
+    setState(() {
       _points.clear();
     });
   }
 
   // 点を追加
-  void _addPoint(TapDownDetails details) {
+  void _addPoint(PointerEvent details) {
     // setState()にリストを更新する関数を渡して状態を更新
     setState(() {
       _points.add(details.localPosition);
@@ -68,7 +78,7 @@ class _PointerDrawingWidgetState extends State<PointerDrawingWidget> {
   }
 }
 
-class MyPainter extends CustomPainter{
+class MyPainter extends CustomPainter {
   final List<Offset> _points;
   final _rectPaint = Paint()..color = Colors.blue;
 
@@ -77,8 +87,9 @@ class MyPainter extends CustomPainter{
   @override
   void paint(Canvas canvas, Size size) {
     // 記憶している点を描画する
-    _points.forEach((offset) =>
-        canvas.drawRect(Rect.fromCenter(center: offset, width: 20.0, height: 20.0), _rectPaint));
+    _points.forEach((offset) => canvas.drawRect(
+        Rect.fromCenter(center: offset, width: 20.0, height: 20.0),
+        _rectPaint));
   }
 
   @override
