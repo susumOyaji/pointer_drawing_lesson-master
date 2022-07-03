@@ -26,9 +26,23 @@ class PointerDrawingWidget extends StatefulWidget {
 
 class _PointerDrawingWidgetState extends State<PointerDrawingWidget> {
   final _points = List<Offset>();
-
   double x = 0.0;
   double y = 0.0;
+
+  // タッチした点をクリアする
+  void _clearPoints() {
+    setState(() {
+      _points.clear();
+    });
+  }
+
+  // 点を追加
+  void _addPoint(PointerEvent details) {
+    // setState()にリストを更新する関数を渡して状態を更新
+    setState(() {
+      _points.add(details.localPosition);
+    });
+  }
 
   void _updateLocation(PointerEvent details) {
     setState(() {
@@ -60,21 +74,6 @@ class _PointerDrawingWidgetState extends State<PointerDrawingWidget> {
         child: Icon(Icons.clear),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
-  }
-
-  // タッチした点をクリアする
-  void _clearPoints() {
-    setState(() {
-      _points.clear();
-    });
-  }
-
-  // 点を追加
-  void _addPoint(PointerEvent details) {
-    // setState()にリストを更新する関数を渡して状態を更新
-    setState(() {
-      _points.add(details.localPosition);
-    });
   }
 }
 
